@@ -23,7 +23,14 @@ public class GetCommand implements Command {
     }
 
     public void getRecipies() {
-        recipeContext.getRecipies().stream().map(Recipe::toString).forEach(System.out::println);
+        recipeContext.getRecipies();
+        for (int i = 1; i < recipeContext.getRecipies().size() + 1; i++) {
+            System.out.println(i + ". " + recipeContext.getRecipies().get(i-1).getName());
+        }
+    }
+
+    public Recipe getRecipe(int index) {
+        return recipeContext.getRecipies().get(index);
     }
 
     public boolean hasRecipe(String recipeName) {

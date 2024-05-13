@@ -1,5 +1,8 @@
 package com.designpatterns.entities;
 
+import com.designpatterns.strategy.AverageRatingStrategy;
+import com.designpatterns.strategy.CalculationStrategy;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -10,6 +13,9 @@ public class Recipe {
     private int servingSize;
     private List<Category> categories;
     private List<Tag> tags;
+    private int totalRatings;
+    private double averageRating;
+    private CalculationStrategy calculationStrategy;
 
     public Recipe(String name, List<String> ingredients, String cookingInstructions, int servingSize, List<Category> categories, List<Tag> tags) {
         this.name = name;
@@ -18,6 +24,7 @@ public class Recipe {
         this.servingSize = servingSize;
         this.categories = categories;
         this.tags = tags;
+        this.calculationStrategy = new AverageRatingStrategy();
     }
 
     public Recipe() {
@@ -71,28 +78,44 @@ public class Recipe {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Recipe recipe = (Recipe) o;
-        return servingSize == recipe.servingSize && Objects.equals(name, recipe.name) && Objects.equals(ingredients, recipe.ingredients) && Objects.equals(cookingInstructions, recipe.cookingInstructions) && Objects.equals(categories, recipe.categories) && Objects.equals(tags, recipe.tags);
+
+    public int getTotalRatings() {
+        return totalRatings;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, ingredients, cookingInstructions, servingSize, categories, tags);
+    public void setTotalRatings(int totalRatings) {
+        this.totalRatings = totalRatings;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public void addRating(int rating) {
+        calculationStrategy.updateRatings(this, rating);
+    }
+
+    public CalculationStrategy getCalculationStrategy() {
+        return calculationStrategy;
+    }
+
+    public void setCalculationStrategy(CalculationStrategy calculationStrategy) {
+        this.calculationStrategy = calculationStrategy;
     }
 
     @Override
     public String toString() {
-        return "Recipe{" +
-                "name='" + name + '\'' +
+        return
+                name +
                 ", ingredients=" + ingredients +
                 ", cookingInstructions='" + cookingInstructions + '\'' +
                 ", servingSize=" + servingSize +
                 ", categories=" + categories +
                 ", tags=" + tags +
-                '}';
+                ", rating=" + calculationStrategy.calculateRating(this);
     }
 }
